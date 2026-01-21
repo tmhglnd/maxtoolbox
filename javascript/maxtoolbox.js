@@ -725,6 +725,25 @@ function change_name()
 	return;
 }
 
+function convert_to_mc(){
+	post('convert_to_mc()', '@mc', '\n');
+
+	var args = arrayfromargs(arguments);
+	post('arguments', args, '\n');
+
+	temp_patch.apply(applycollect);
+	// if not enough objects selected, fail silently
+	if (objarray.length < 1){
+		return;
+	}
+
+	for (var objs in objarray){
+		// post('new', 'mc.' + objarray[objs].obj.maxclass);
+		// post('obj', objarray[objs].obj.boxtext, objarray[objs].obj.maxclass, '\n');
+	}
+	return;
+}
+
 function parse_patcher(){
 
 	if (max.frontpatcher.filepath == ""){
