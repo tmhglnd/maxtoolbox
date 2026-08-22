@@ -122,6 +122,9 @@ function presend()
 {
 	// get the patcher that is currently in front
 	temp_patch = max.frontpatcher;
+	// reset moving mouse to false
+	_isMovingX = false;
+	_isMovingY = false;
 }
 
 function send()
@@ -225,6 +228,11 @@ function checkSelected(selected){
 	return true;
 }
 
+var _mouseX = 0;
+var _mouseY = 0;
+var _isMovingX = false;
+var _isMovingY = false;
+
 function alignhorz(mouseX)
 {
 	if (max.frontpatcher.locked){
@@ -251,8 +259,18 @@ function alignhorz(mouseX)
 		// if no mouse movement then immediately reorder the objects
 		var width = Math.max(0, objarray[objarray.length-1].obj.rect[X1] - objarray[0].obj.rect[X1]);
 	} else {
-		// width of total objects is mouseX - (1st object + window posX + toolbar width)
-		var width = Math.max(0, mouseX - (objarray[0].obj.rect[X1] + max.frontpatcher.wind.location[X1] + 36));
+		if (!_isMovingX){
+			_mouseX = mouseX;
+			_isMovingX = true;
+		}
+		var deltaMouseX = mouseX - _mouseX;
+		_mouseX = mouseX;
+
+		// width of total objects is last - first object X location		
+		var width = objarray[objarray.length-1].obj.rect[X1] - objarray[0].obj.rect[X1];
+		// post('width', width);
+		// add the delta in mouse x postion to stretch/shrink location
+		width = Math.max(0, width + deltaMouseX);
 	}
 	// distance between object is width divided by total objects
 	var deltax = width / (objarray.length-1);
@@ -305,8 +323,18 @@ function alignvert(mouseY)
 		// if no mouse movement then immediately reorder the objects
 		var height = Math.max(0, objarray[objarray.length-1].obj.rect[Y1] - objarray[0].obj.rect[Y1]);
 	} else {
-		// width of total objects is mouseX - (1st object + window posY+ toolbar width)
-		var height = Math.max(0, mouseY - (objarray[0].obj.rect[Y1] + max.frontpatcher.wind.location[Y1] + 36));
+		if (!_isMovingY){
+			_mouseY = mouseY;
+			_isMovingY = true;
+		}
+		var deltaMouseY = mouseY - _mouseY;
+		_mouseY = mouseY;
+
+		// height of total objects is last - first object X location		
+		var height = objarray[objarray.length-1].obj.rect[Y1] - objarray[0].obj.rect[Y1];
+		// post('height', height);
+		// add the delta in mouse x postion to stretch/shrink location
+		height = Math.max(0, height + deltaMouseY);
 	}
 	// distance between object is height divided by total objects
 	var deltay = height / (objarray.length-1);
