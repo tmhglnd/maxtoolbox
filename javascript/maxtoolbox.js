@@ -462,6 +462,12 @@ function connect_new_object(){
 		
 		objarray[0].obj.patcher.connect(objarray[objs].obj, 0 + g.out_offset - 1, n, 0 + g.in_offset - 1);
 		undo_objarray.push([objarray[objs].obj , 0 + g.out_offset, n, 0 + g.in_offset]);
+
+		// Deselect previously selected object(s)
+		for (var i = 0; i < objarray.length; i++) {
+			objarray[i].obj.selected = false;
+		}
+        // Select only the newly created object
 		n.selected = true;
 	}
 	// add to history
@@ -722,25 +728,6 @@ function change_name()
 		error(ARG_MISMATCH);
 	}
 	clean_up();
-	return;
-}
-
-function convert_to_mc(){
-	post('convert_to_mc()', '@mc', '\n');
-
-	var args = arrayfromargs(arguments);
-	post('arguments', args, '\n');
-
-	temp_patch.apply(applycollect);
-	// if not enough objects selected, fail silently
-	if (objarray.length < 1){
-		return;
-	}
-
-	for (var objs in objarray){
-		// post('new', 'mc.' + objarray[objs].obj.maxclass);
-		// post('obj', objarray[objs].obj.boxtext, objarray[objs].obj.maxclass, '\n');
-	}
 	return;
 }
 
